@@ -3,7 +3,8 @@ import ProductItem from "./ProductItem";
 
 function ProductsList(props) {
   const [checkStatus, setCheckStatus] = useState(false);
-  const products = props.products;
+  const state = props.state;
+  const dispatch = props.dispatch;
   return (
     <>
       <table className="table table-bordered">
@@ -14,8 +15,8 @@ function ProductsList(props) {
             <th>
               <button
                 onClick={() => {
-                  props.onCheckAll(!checkStatus);
                   setCheckStatus(!checkStatus);
+                  dispatch({ type: "handleCheckAll", payload: !checkStatus });
                 }}
                 className="btn btn-outline-danger"
               >
@@ -23,14 +24,14 @@ function ProductsList(props) {
                   className={checkStatus ? "bi bi-check2-circle" : "bi bi-app"}
                 ></i>
                 <span className="m-1">
-                  {products.filter((p) => p.checked).length}
+                  {state.products.filter((p) => p.checked).length}
                 </span>
               </button>
             </th>
             <th>
               <button
                 onClick={() => {
-                  props.onDeleteCkecked();
+                  dispatch({ type: "handledeleteCkecked" });
                 }}
                 className="btn btn-outline-danger"
               >
@@ -40,12 +41,11 @@ function ProductsList(props) {
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => (
+          {state.products.map((p) => (
             <ProductItem
               key={p.id}
               product={p}
-              onCheck={props.onCheck}
-              onDelete={props.onDelete}
+              dispatch={dispatch}
             ></ProductItem>
           ))}
         </tbody>

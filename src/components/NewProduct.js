@@ -3,6 +3,7 @@ import React, { useState } from "react";
 function NewProduct(props) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
+  const dispatch = props.dispatch;
   const handleAddProduct = (event) => {
     let product = {
       id: Date.now(),
@@ -11,7 +12,7 @@ function NewProduct(props) {
     };
     setName("");
     setPrice(0);
-    props.onAdd(product);
+    dispatch({ type: "addProduct", payload: product });
   };
   return (
     <div className="m-2 p-2 border border-info">
