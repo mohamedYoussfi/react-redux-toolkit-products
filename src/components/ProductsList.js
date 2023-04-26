@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import ProductItem from "./ProductItem";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addProduct,
+  checkAllProducts,
+  deleteCheckedProducts,
+} from "../redux/redux";
 
 function ProductsList(props) {
   const [checkStatus, setCheckStatus] = useState(false);
-  const state = props.state;
-  const dispatch = props.dispatch;
+  const products = useSelector((store) => store.productState.products);
+  const dispatch = useDispatch();
   return (
     <>
       <table className="table table-bordered">
@@ -16,7 +22,13 @@ function ProductsList(props) {
               <button
                 onClick={() => {
                   setCheckStatus(!checkStatus);
-                  dispatch({ type: "handleCheckAll", payload: !checkStatus });
+                  dispatch(checkAllProducts(!checkStatus));
+                  /*
+                  dispatch({
+                    type: "products/checkAllProducts",
+                    payload: !checkStatus,
+                  });
+                  */
                 }}
                 className="btn btn-outline-danger"
               >
@@ -24,14 +36,20 @@ function ProductsList(props) {
                   className={checkStatus ? "bi bi-check2-circle" : "bi bi-app"}
                 ></i>
                 <span className="m-1">
-                  {state.products.filter((p) => p.checked).length}
+                  {products.filter((p) => p.checked).length}
                 </span>
               </button>
             </th>
             <th>
               <button
                 onClick={() => {
-                  dispatch({ type: "handledeleteCkecked" });
+                  dispatch(deleteCheckedProducts());
+                  /*
+                  dispatch({
+                    type: "products/deleteCheckedProducts",
+                    payload: {},
+                  });
+                  */
                 }}
                 className="btn btn-outline-danger"
               >
@@ -41,12 +59,8 @@ function ProductsList(props) {
           </tr>
         </thead>
         <tbody>
-          {state.products.map((p) => (
-            <ProductItem
-              key={p.id}
-              product={p}
-              dispatch={dispatch}
-            ></ProductItem>
+          {products.map((p) => (
+            <ProductItem key={p.id} product={p}></ProductItem>
           ))}
         </tbody>
       </table>
